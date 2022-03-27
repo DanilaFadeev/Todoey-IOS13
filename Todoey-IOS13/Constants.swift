@@ -6,8 +6,7 @@
 //
 
 struct Constants {
-    static let CategoryCell = "CategoryCell"
-    static let TodoItemCell = "TodoItemCell"
+    static let SwipeTableCell = "SwipeTableCell"
     
     static let ItemsSegue = "goToItems"
 }

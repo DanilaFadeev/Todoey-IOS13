@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 
-class CategoryListViewController: UITableViewController {
+class CategoryListViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     
@@ -17,6 +17,7 @@ class CategoryListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.rowHeight = 60.0
         fetchCategories()
     }
     
@@ -46,7 +47,7 @@ class CategoryListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.CategoryCell, for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = categories?[indexPath.row].name
 
         return cell
@@ -59,6 +60,12 @@ class CategoryListViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let todoListVC = segue.destination as! TodoListViewController
         todoListVC.parentCategory = categories?[tableView.indexPathForSelectedRow!.row]
+    }
+    
+    override func deleteModel(at indexPath: IndexPath) {
+        if let category = categories?[indexPath.row] {
+            deleteCategory(category)
+        }
     }
     
     // MARK: - Category data manipulations
@@ -78,5 +85,15 @@ class CategoryListViewController: UITableViewController {
         }
 
         tableView.reloadData()
+    }
+    
+    func deleteCategory(_ category: RCategory) {
+        do {
+            try realm.write {
+                realm.delete(category)
+            }
+        } catch {
+            print("Failed to delete category: \(error)")
+        }
     }
 }

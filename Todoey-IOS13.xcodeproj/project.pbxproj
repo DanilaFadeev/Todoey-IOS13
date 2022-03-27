@@ -20,6 +20,7 @@
 		BA605B5C27F05FB3001BE50A /* RCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA605B5B27F05FB3001BE50A /* RCategory.swift */; };
 		BA605B5E27F06023001BE50A /* RTodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA605B5D27F06023001BE50A /* RTodoItem.swift */; };
 		BACB492327F0E7E400B47A1C /* SwipeCellKit in Frameworks */ = {isa = PBXBuildFile; productRef = BACB492227F0E7E400B47A1C /* SwipeCellKit */; };
+		BACB492527F0FD6500B47A1C /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACB492427F0FD6500B47A1C /* SwipeTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		BA605B5427EFBEBF001BE50A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		BA605B5B27F05FB3001BE50A /* RCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCategory.swift; sourceTree = "<group>"; };
 		BA605B5D27F06023001BE50A /* RTodoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTodoItem.swift; sourceTree = "<group>"; };
+		BACB492427F0FD6500B47A1C /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 			children = (
 				BA605B5227EFB652001BE50A /* CategoryListViewController.swift */,
 				BA605B1427EE5CE0001BE50A /* TodoListViewController.swift */,
+				BACB492427F0FD6500B47A1C /* SwipeTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -189,6 +192,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BACB492527F0FD6500B47A1C /* SwipeTableViewController.swift in Sources */,
 				BA605B5327EFB652001BE50A /* CategoryListViewController.swift in Sources */,
 				BA605B5E27F06023001BE50A /* RTodoItem.swift in Sources */,
 				BA605B1527EE5CE0001BE50A /* TodoListViewController.swift in Sources */,
