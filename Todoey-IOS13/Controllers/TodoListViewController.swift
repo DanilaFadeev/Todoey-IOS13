@@ -6,16 +6,16 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 
 class TodoListViewController: UITableViewController {
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let realm = try! Realm()
     
-    var itemArray = [TodoItem]()
+    var itemArray: Results<RTodoItem>?
     
-    var parentCategory: Category? {
+    var parentCategory: RCategory? {
         didSet {
             fetchItems()
         }
@@ -26,28 +26,33 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemArray.count
+        return itemArray?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.TodoItemCell)!
-        let item = itemArray[indexPath.row]
-        
-        cell.textLabel?.text = item.title
-        cell.accessoryType = item.isDone ? .checkmark : .none
+    
+        if let item = itemArray?[indexPath.row] {
+            cell.textLabel?.text = item.title
+            cell.accessoryType = item.isDone ? .checkmark : .none
+        }
 
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        itemArray[indexPath.row].isDone = !itemArray[indexPath.row].isDone
-        tableView.deselectRow(at: indexPath, animated: true)
+        if let item = itemArray?[indexPath.row] {
+            do {
+                try realm.write {
+                    item.isDone = !item.isDone
+                }
+            } catch {
+                print("Error updating item: \(error)")
+            }
+        }
         
-        // Delete items
-        // context.delete(itemArray[indexPath.row])
-        // itemArray.remove(at: indexPath.row)
-
-        saveItems()
+        tableView.reloadData()
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -58,13 +63,10 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add", style: .default) { UIAlertAction in
             if let text = alertTextField?.text {
                 alertTextField?.text = ""
-                
-                let item = TodoItem(context: self.context)
+
+                let item = RTodoItem()
                 item.title = text
-                item.parentCategory = self.parentCategory
-                
-                self.itemArray.append(item)
-                self.saveItems()
+                self.saveItem(item)
             }
         }
         
@@ -80,31 +82,37 @@ class TodoListViewController: UITableViewController {
     // MARK: - Todo items data manipulations
     
     func fetchItems(predicate: NSPredicate? = nil) {
-        let request = TodoItem.fetchRequest()
-        do {
-            if let categoryName = parentCategory?.name {
-                let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", categoryName)
-                if let predicate = predicate {
-                    request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, predicate])
-                } else {
-                    request.predicate = categoryPredicate
-                }
-    
-                itemArray = try context.fetch(request)
-            }
-        } catch {
-            print("Error fetching data from context: \(error)")
+        if let predicate = predicate {
+            itemArray = parentCategory?.todoItems.filter(predicate).sorted(byKeyPath: "createdAt", ascending: true)
+        } else {
+            itemArray = parentCategory?.todoItems.sorted(byKeyPath: "createdAt", ascending: true)
         }
 
         tableView.reloadData()
     }
     
-    func saveItems() {
+    func saveItem(_ item: RTodoItem) {
         do {
-            try context.save()
+            try realm.write {
+                parentCategory?.todoItems.append(item)
+                realm.add(item)
+            }
         } catch {
-            print("Error saving context: \(error)")
+            print("Failed to save item: \(error)")
         }
+
+        tableView.reloadData()
+    }
+    
+    func deleteItem(_ item: RTodoItem) {
+        do {
+            try realm.write {
+                realm.delete(item)
+            }
+        } catch {
+            print("Failed to delete item: \(error)")
+        }
+
         tableView.reloadData()
     }
     
