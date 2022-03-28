@@ -9,6 +9,7 @@ import RealmSwift
 
 class RCategory: Object {
     @Persisted var name: String = ""
+    @Persisted var color: String = ""
     
     @Persisted var todoItems: List<RTodoItem>
 }

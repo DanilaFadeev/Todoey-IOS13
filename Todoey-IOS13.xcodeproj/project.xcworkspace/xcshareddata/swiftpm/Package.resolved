@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "RandomColor",
+        "repositoryURL": "https://github.com/onevcat/RandomColorSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "ab01c6eff99f40c5e23ffcb957eb3971f937f106",
+          "version": "2.0.0"
+        }
+      },
+      {
         "package": "RealmDatabase",
         "repositoryURL": "https://github.com/realm/realm-core",
         "state": {

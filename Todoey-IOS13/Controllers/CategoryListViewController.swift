@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import RandomColor
 
 class CategoryListViewController: SwipeTableViewController {
     
@@ -21,6 +22,14 @@ class CategoryListViewController: SwipeTableViewController {
         fetchCategories()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navigationBar = navigationController?.navigationBar else {
+            fatalError("navigationBar is not loaded")
+        }
+
+        navigationBar.backgroundColor = UIColor.systemTeal
+    }
+    
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Add New Category", message: nil, preferredStyle: .alert)
         
@@ -32,6 +41,7 @@ class CategoryListViewController: SwipeTableViewController {
                 if let text = alertTextField?.text {
                     let category = RCategory()
                     category.name = text
+                    category.color = randomColor(hue: .random, luminosity: .light).hexString
                     self.saveCategory(category)
                 }
             }
@@ -48,7 +58,11 @@ class CategoryListViewController: SwipeTableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        cell.textLabel?.text = categories?[indexPath.row].name
+        
+        if let category = categories?[indexPath.row] {
+            cell.textLabel?.text = category.name
+            cell.backgroundColor = UIColor(hexString: category.color)
+        }
 
         return cell
     }

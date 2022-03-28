@@ -27,6 +27,17 @@ class TodoListViewController: SwipeTableViewController {
         tableView.rowHeight = 60.0
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navigationBar = navigationController?.navigationBar else {
+            fatalError("navigationBar is not loaded")
+        }
+
+        if let parentCategory = parentCategory {
+            title = parentCategory.name
+            navigationBar.backgroundColor = UIColor(hexString: parentCategory.color)
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray?.count ?? 0
     }
