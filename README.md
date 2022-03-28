@@ -1,7 +1,7 @@
 # Todoey App
 
-Simple Todo-like IOS app with a persistent data store
+Simple Todo-like IOS app with a persistent data store.
 
 ## Demo
 
-![Demo](./demo.gif)
+<img src="./demo.gif" alt="Demo" height="600" />
